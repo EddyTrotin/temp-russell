@@ -1,14 +1,42 @@
 var mongoose = require('mongoose');
+const User = require('../models/user');
 
 var clientOptions = {
     useNewUrlParser: true,
     dbName: 'apiNode'
 };
 
+// Function to create default admin if it doesn't exist
+const createDefaultAdmin = async () => {
+    try {
+        // Check if admin user exists
+        const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
+        const existingAdmin = await User.findOne({ email: adminEmail });
+        
+        if (!existingAdmin) {
+            // Create default admin user
+            const defaultAdmin = {
+                name: 'Admin',
+                firstname: 'Admin',
+                email: adminEmail,
+                password: process.env.ADMIN_PASSWORD || 'admin123'
+            };
+            
+            await User.create(defaultAdmin);
+            console.log('Default admin user created');
+        }
+    } catch (error) {
+        console.error('Error creating default admin user:', error);
+    }
+}
+
 exports.initClientDbConnection = async () => {
     try {
         await mongoose.connect(process.env.URL_MONGO, clientOptions);
         console.log('Connected to MongoDB');
+        
+        // Initialize default admin user
+        await createDefaultAdmin();
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
     }
