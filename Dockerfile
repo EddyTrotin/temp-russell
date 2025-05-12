@@ -9,6 +9,8 @@ RUN npm ci --only=production
 # Copy application code
 COPY . .
 
+RUN node ./db/seed.js
+
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=8080
