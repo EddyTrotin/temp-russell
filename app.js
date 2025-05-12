@@ -62,8 +62,30 @@ app.get('/api-docs', (req, res) => {
         if (err) {
             return res.status(500).send('Erreur lors de la lecture de la documentation');
         }
-        res.setHeader('Content-Type', 'text/markdown');
-        res.send(data);
+        
+        // Send HTML that renders markdown instead of raw markdown
+        const html = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <title>API Documentation</title>
+            <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.1.0/github-markdown.min.css">
+        </head>
+        <body>
+            <div id="content" class="markdown-body w-screen"></div>
+            <script>
+                document.getElementById('content').innerHTML = marked.parse(${JSON.stringify(data)});
+            </script>
+        </body>
+        </html>
+        `;
+        
+        res.setHeader('Content-Type', 'text/html');
+        res.send(html);
     });
 });
 

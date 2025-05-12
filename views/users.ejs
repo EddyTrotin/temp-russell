@@ -250,8 +250,8 @@
             const token = localStorage.getItem('token');
 
             try {
-                const response = await fetch('/users', {
-                    method: 'POST',
+                const response = await fetch('/api/users/add', {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': token
