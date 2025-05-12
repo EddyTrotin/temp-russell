@@ -12,6 +12,7 @@ services:
       - PORT=8000
       - CORS_ORIGIN=*
       - JWT_SECRET=changeThisInProduction
+      - SECRET_KEY=changeThisInProduction
     depends_on:
       - mongo
     volumes:
