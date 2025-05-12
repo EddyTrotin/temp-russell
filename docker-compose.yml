@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: api_russell
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - URL_MONGO=mongodb://mongo:27017/apiNode
+      - PORT=8000
+      - CORS_ORIGIN=*
+      - JWT_SECRET=changeThisInProduction
+    depends_on:
+      - mongo
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+
+  mongo:
+    image: mongo:latest
+    container_name: api_russell_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data: 
